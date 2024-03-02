@@ -10,10 +10,12 @@ public:
         y = 0;
     }
     Point(int x, int y) {
-        x = x;
-        y = y;
+        printf("Point(int x, int y)\n");
+        this->x = x;
+        this->y = y;
     }
     Point(Point& p) {
+        printf("Point(Point& p)\n");
         x = p.x;
         y = p.y;
     }
@@ -29,20 +31,38 @@ int main()
 {
     setlocale(NULL,"RU");
 
-    // Динамическое создание точки и ее удаление
-    printf("\nДинамическое создание точки и ее удаление:\n");
+    {
+        // Динамическое создание точки и ее удаление
+        printf("\nДинамическое создание точки и ее удаление:\n");
+        Point* p = new Point();
+        p->show();
+        delete(p);
+        p->show();
+
+        // Статическое создание точки и ее удаление
+        printf("\nСтатическое создание точки и ее удаление:\n");
+        {
+            Point p;
+            p.show();
+        }
+        p->show();
+    }
+
+    // Использование различных конструкторов
+    printf("\nИспользование разных конструкторов:\n");
     Point* p = new Point();
     p->show();
+
+    Point* p1 = new Point(5,5);
+    p1->show();
+    
+    Point* p2 = new Point(*p1);
+    p2->show();
+    
     delete(p);
-    p->show();
-
-    // Статическое создание точки и ее удаление
-    printf("\nСтатическое создание точки и ее удаление:\n");
-    {
-        Point p;
-        p.show();
-    }
-    p->show();
-
+    delete(p1);
+    delete(p2);
+    
 }
+
 
