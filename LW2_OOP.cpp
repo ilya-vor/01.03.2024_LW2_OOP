@@ -42,7 +42,6 @@ public:
     Point center;
     Figure() {
         printf("[Figure()]\n");
-        center.set(0, 0);
     }
     Figure(int x, int y) {
         printf("[Figure(int x, int y)]\n");
@@ -62,14 +61,14 @@ public:
 };
 
 class Circle : public Figure {
+private:
     int r;
+public:
     Circle(){
-        r = 0;
-        center.set(0, 0);
+        this->r = 0;
         printf("[Circle()]\n");
     }
     Circle(int r) {
-        center.set(0,0);
         this->r = r;
         printf("[Circle(int r)]\n");
     }
@@ -77,6 +76,10 @@ class Circle : public Figure {
         this->r = c.r;
         center.set(c.center);
         printf("[Circle(Circle &c)]\n");
+    }
+    void show() {
+        printf("[Circle::show()] r = %d\n", r);
+        center.Point::show();
     }
     float space(){
         float ans = 3.14 * r * r;
@@ -93,15 +96,18 @@ int main()
     setlocale(NULL,"RU");
 
     {
+        //
         // Динамическое создание точки и ее удаление
+        //
         printf("\nДинамическое создание точки и ее удаление:\n");
         Point* p = new Point();
         p->show();
         delete(p);
         p->show(); // Обращение к неинецилизированной памяти,
                    //так как объект был удален в предыдущей строчке
-
+        //
         // Статическое создание точки и ее удаление
+        //
         printf("\nСтатическое создание точки и ее удаление:\n");
         {
             Point p;
@@ -110,8 +116,9 @@ int main()
         p->show(); // Обращение к неинецилизированной памяти,
                    //так как объект был удален в предыдущей строчке
     }
-
+    //
     // Использование различных конструкторов
+    //
     printf("\nИспользование разных конструкторов:\n");
     Point* p = new Point();
     p->show();
@@ -126,13 +133,24 @@ int main()
     delete(p1);
     delete(p2);
 
+    //
     // Создал объект Figure, который содержит в себе Point
+    //
     printf("\nСоздал объект Figure, который содержит в себе Point:\n");
     Figure* f = new Figure();
     f->show();
     delete(f);
     // Время жизни Figure и Point (который внутри Figure) - одинаковое
     // Значит это наиболее сильная связь между классами - композиция
+
+    //
+    // Создание Circle (наследника Figure)
+    //
+    printf("\nСоздание Circle (наследника Figure):\n");
+    Circle* c = new Circle();
+    c->show();
+    delete(c);
+   
 }
 
 
