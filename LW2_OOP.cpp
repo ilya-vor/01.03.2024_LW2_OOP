@@ -92,6 +92,38 @@ public:
     }
 };
 
+class Section {
+private:
+    Point* strt;
+    Point* end;
+public:
+    Section() {
+        printf("[Section()]\n");
+        strt = new Point();
+        end = new Point();
+    }
+    Section(int x1, int y1, int x2, int y2) {
+        printf("[Section(int x1, int y1, int x2, int y2)]\n");
+        strt = new Point(x1,y1);
+        end = new Point(x2,y2);
+    }
+    Section(Section& s) {
+        printf("[Section(Section& s)]\n");
+        strt = new Point(*(s.strt));
+        end = new Point(*(s.end));
+    }
+    void show() {
+        printf("[Section::show()]\n");
+        strt->show();
+        end->show();
+    }
+    ~Section() {
+        printf("[~Section()]\n");
+        delete(strt);
+        delete(end);
+    }
+};
+
 int main()
 {
     setlocale(NULL,"RU");
@@ -155,7 +187,18 @@ int main()
     //c->center - не скомпилистся так как center - protected 
     //(доступен только в полях самого класса и всех его наследников)
     delete(c);
-   
+
+    //
+    // Создал объект Section, который хранит указатели на 2 Point
+    //
+    printf("\nСоздал объект Section, который хранит указатели на 2 Point\n");
+    Section* s = new Section(1, 1, 5, 5);
+    s->show();
+    delete(s);
+    //s->show();
+    //Вызвано необработанное исключение: нарушение доступа для чтения.
+    //this было 0xFFFFFFFFFFFFFFFB.
+    //Обратились к неинициализированной памяти - получили runtime ошибку
 }
 
 
