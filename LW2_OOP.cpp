@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 
 class Point {
-private:
+public:
     int x, y;
 public:
     Point() {
@@ -14,7 +14,7 @@ public:
         this->x = x;
         this->y = y;
     }
-    Point(Point& p) {
+    Point(const Point& p) {
         printf("[Point(Point& p)]\n");
         x = p.x;
         y = p.y;
@@ -54,7 +54,7 @@ public:
     }
     void show() {
         printf("[Figure::show()]\n");
-        center.Point::show();
+        center.show();
     }
     ~Figure() {
         printf("[~Figure()]\n");
@@ -65,18 +65,18 @@ class Circle : public Figure {
 private:
     int r;
 public:
-    Circle(){
-        this->r = 0;
+    Circle(): r(0){
         printf("[Circle()]\n");
     }
-    Circle(int r) {
-        this->r = r;
+    Circle(int r): r(r) {
         printf("[Circle(int r)]\n");
     }
-    Circle(Circle &c){
-        this->r = c.r;
-        center.set(c.center);
+    Circle(Circle &c): Figure(c), r(c.r){
         printf("[Circle(Circle &c)]\n");
+    }
+    void setCenter(int x, int y) {
+        center.x = x;
+        center.y = y;
     }
     void show() {
         printf("[Circle::show()] r = %d\n", r);
@@ -97,20 +97,14 @@ private:
     Point* strt;
     Point* end;
 public:
-    Section() {
+    Section(): strt(new Point()), end(new Point()){
         printf("[Section()]\n");
-        strt = new Point();
-        end = new Point();
     }
-    Section(int x1, int y1, int x2, int y2) {
+    Section(int x1, int y1, int x2, int y2): strt(new Point(x1, y1)), end(new Point(x2, y2)){
         printf("[Section(int x1, int y1, int x2, int y2)]\n");
-        strt = new Point(x1,y1);
-        end = new Point(x2,y2);
     }
-    Section(Section& s) {
+    Section(Section& s): strt(new Point(*(s.strt))), end(new Point(*(s.end))){
         printf("[Section(Section& s)]\n");
-        strt = new Point(*(s.strt));
-        end = new Point(*(s.end));
     }
     void show() {
         printf("[Section::show()]\n");
@@ -209,6 +203,13 @@ int main()
     delete(f1); // ~Circle() не вызывается, нооо!
     ((Circle*)f1)->show(); // здесь мы видим что атрибут r обьекта Circle неиницилизирован
     // как так?
+    
+    printf("\n\n\n");
+    Circle* c2 = new Circle(9);
+    c2->setCenter(2,3);
+    Circle* c1 = new Circle(*c2);
+    c2->show();
+    c1->show();
 }
 
 
